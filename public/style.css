@@ -1,0 +1,266 @@
+*{
+    padding: 0px;
+    margin:0px
+    
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  background-image: url("/bg4.jpg");
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+  background-color: #ffffff;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  color:#1e3a8a;
+}
+
+footer {
+  background-color: #e5e7eb;
+  text-align: center;
+  padding: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px;
+  max-width: 300px;
+  min-width: 200px;
+  gap: 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+
+.card.show{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.card img {
+    max-width: 100%;
+    height: auto;
+} 
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+#recipeContainer {
+    display:flex;
+    flex-wrap: wrap;
+    
+}
+
+#searchedRecipes{
+  display:flex;
+    flex-wrap: wrap;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+ul {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+#favoritesContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+    justify-content: space-evenly;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.favorite-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  width: 300px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.missedIngred{
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  height: 3000px;
+}
+.missedIngred li {
+  list-style-type: decimal;
+}
+
+header{
+    display: flex;
+    flex-direction: row;
+    background: #1e3a8a;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.favorite-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  position: relative;
+}
+
+.remove-favorite {
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  bottom: 10px;
+}
+
+.remove-favorite:hover {
+  background-color: rgb(255, 99, 99); 
+  box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+}
+
+.btnFavoriteAdd {
+  background-color: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 20px;
+  bottom: 10px;
+}
+.btnFavoriteAdd:hover {
+  background-color: #345bb5; 
+  box-shadow: 0 4px 8px rgba(30, 58, 138, 0.3);
+}
+
+input{
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  outline: none;
+  background-color: #f1f5f9; 
+  color: #1e3a8a;            
+  font-size: 16px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+input:focus {
+  box-shadow: 0 0 0 2px #1e3a8a55;
+}
+
+.titleContainer {
+    width: 100%;
+}
+
+.pageTitle {
+    text-align: center;
+    
+}
+
+/* These classes are for fonts */
+.my-hand-pre-text {
+  font-family: 'Edu NSW ACT Hand Pre', cursive;
+  font-weight: 700;
+}
+
+.my-cursive-text {
+  font-family: 'Edu NSW ACT Cursive', cursive;
+  font-weight: 700;
+}
+
+
+.feature-intro {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff9f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.api-feature, .favorites-feature {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #ff9a8b;
+}
+
+.favorites-feature {
+  border-left-color: #8bc34a;
+}
+
+h3 {
+  color: #e65100;
+  margin-top: 0;
+}
+
+ul {
+  padding-left: 1.5rem;
+}
+
+li {
+  margin-bottom: 0.5rem;
+}
+
+.cta {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+#explore-btn {
+  background: #ff6f61;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+#explore-btn:hover {
+  background: #e65100;
+  transform: scale(1.05);
+}
