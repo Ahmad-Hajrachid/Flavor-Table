@@ -31,5 +31,80 @@
         <h2>Flavor Table 2025</h2>
     </footer>
     <script src="../app.js"></script>
+    <div id="editModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h3>Edit Recipe</h3>
+    <form id="editForm">
+      <input type="hidden" id="recipeId">
+      <label>Title:
+        <input type="text" id="title">
+      </label>
+      <label>Image URL:
+        <input type="text" id="image">
+      </label>
+      <label>Instructions:
+        <textarea id="instructions"></textarea>
+      </label>
+      <label>Ingredients (comma separated):
+        <input type="text" id="ingredients">
+      </label>
+      <label>Ready In (minutes):
+        <input type="number" id="readyin">
+      </label>
+      <center>
+        <button style="width: 100%;" type="submit">Save</button>
+      <button style="width: 100%;" type="button" onclick="closeModal()">Cancel</button>
+      </center>
+      
+    </form>
+  </div>
+</div>
+
+<script>
+    async function openEditModal(id) {
+    const response = await fetch(`/recipes/showOne/${id}`);
+    const data = await response.json();
+
+    document.getElementById("recipeId").value = id;
+    document.getElementById("title").value = data.title;
+    document.getElementById("image").value = data.image;
+    document.getElementById("instructions").value = data.instructions;
+    document.getElementById("ingredients").value = data.ingredients
+    .map(ing => `${ing.name}${ing.amount ? ` (${ing.amount} ${ing.unit})` : ''}`)
+    .join(", ");
+    document.getElementById("readyin").value = data.readyin;
+
+    document.getElementById("editModal").style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("editModal").style.display = "none";
+  }
+
+  document.getElementById("editForm").addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById("recipeId").value;
+    const title = document.getElementById("title").value;
+    const image = document.getElementById("image").value;
+    const instructions = document.getElementById("instructions").value;
+    const ingredients = document.getElementById("ingredients").value.split(",").map(i => i.trim());
+    const readyin = document.getElementById("readyin").value;
+
+    const response = await fetch(`/recipes/update/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title, image, instructions, ingredients, readyin })
+    });
+
+    if (response.ok) {
+      alert("Recipe updated!");
+      closeModal();
+    } else {
+      alert("Error updating recipe.");
+    }
+  });
+</script>
 </body>
 </html>
