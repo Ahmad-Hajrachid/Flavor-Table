@@ -60,22 +60,26 @@
     </form>
   </div>
 </div>
-
 <script>
-    async function openEditModal(id) {
-    const response = await fetch(`/recipes/showOne/${id}`);
-    const data = await response.json();
+  async function openEditModal(id) {
+    try {
+      const response = await axios.get(`/recipes/showOne/${id}`);
+      const data = response.data;
 
-    document.getElementById("recipeId").value = id;
-    document.getElementById("title").value = data.title;
-    document.getElementById("image").value = data.image;
-    document.getElementById("instructions").value = data.instructions;
-    document.getElementById("ingredients").value = data.ingredients
-    .map(ing => `${ing.name}${ing.amount ? ` (${ing.amount} ${ing.unit})` : ''}`)
-    .join(", ");
-    document.getElementById("readyin").value = data.readyin;
+      document.getElementById("recipeId").value = id;
+      document.getElementById("title").value = data.title;
+      document.getElementById("image").value = data.image;
+      document.getElementById("instructions").value = data.instructions;
+      document.getElementById("ingredients").value = data.ingredients
+        .map(ing => `${ing.name}${ing.amount ? ` (${ing.amount} ${ing.unit})` : ''}`)
+        .join(", ");
+      document.getElementById("readyin").value = data.readyin;
 
-    document.getElementById("editModal").style.display = "block";
+      document.getElementById("editModal").style.display = "block";
+    } catch (error) {
+      console.error("Error opening modal:", error);
+      alert("Failed to load recipe data.");
+    }
   }
 
   function closeModal() {
@@ -92,19 +96,29 @@
     const ingredients = document.getElementById("ingredients").value.split(",").map(i => i.trim());
     const readyin = document.getElementById("readyin").value;
 
-    const response = await fetch(`/recipes/update/${id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ title, image, instructions, ingredients, readyin })
-    });
+    try {
+      await axios.put(`/recipes/update/${id}`, {
+        title,
+        image,
+        instructions,
+        ingredients,
+        readyin
+      });
 
-    if (response.ok) {
       alert("Recipe updated!");
       closeModal();
-    } else {
+      if (typeof displayFavorites === "function") {
+        await displayFavorites(); // Refresh the favorites list if the function exists
+      } else {
+        location.reload(); // Fallback: refresh the page
+      }
+    } catch (error) {
+      console.error("Update failed:", error);
       alert("Error updating recipe.");
     }
   });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 </html>
