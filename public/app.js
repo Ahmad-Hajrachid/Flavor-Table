@@ -1,10 +1,10 @@
+// const { default: axios } = require("axios");
+
 const RandomButton = document.getElementById("randomBtn");
 const container = document.getElementById("recipeContainer");
 const searchButton = document.getElementById("searchButton");
 const searchedContainer = document.getElementById("searchedRecipes");
 const favButton = document.getElementById("btnFavoriteAdd")
-
-
 
 async function addToFavorites(recipe) {
   try {
@@ -14,6 +14,7 @@ async function addToFavorites(recipe) {
       amount: ing.amount,
       unit: ing.unit
     }));
+
     // Prepare data for POST request
     const recipeData = {
       title: recipe.title,
@@ -23,29 +24,25 @@ async function addToFavorites(recipe) {
       readyin: recipe.readyInMinutes || 0
     };
 
-    // Send to backend 
-    const response = await fetch("/recipes/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(recipeData)
-    });
+    // Send to backend using Axios
+    await axios.post("/recipes/add", recipeData);
 
-    if (response.ok) {
-      alert(`${recipe.title} added to favorites!`);
-    } else {
-      const error = await response.json();
-      alert(`Failed to add: ${error.error}`);
-    }
+    // If no error is thrown, it's a success
+    alert(`${recipe.title} added to favorites!`);
   } catch (error) {
-    console.error("Add failed:", error);
-    alert("Error adding recipe to favorites");
+    if (error.response && error.response.data?.error) {
+      alert(`Failed to add: ${error.response.data.error}`);
+    } else {
+      console.error("Add failed:", error);
+      alert("Error adding recipe to favorites");
+    }
   }
-};
+}
+
 
 async function addToFavoritesFromSearch(recipe) {
   try {
     // Transform ingredients to match your database schema
-    
     const ingredients = recipe.missedIngredients.map(ing => ({
       name: ing.name,
       amount: ing.amount,
@@ -62,47 +59,39 @@ async function addToFavoritesFromSearch(recipe) {
     };
 
     // Send to backend 
-    const response = await fetch("/recipes/add", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(recipeData)
-    });
+    await axios.post("/recipes/add", recipeData);
 
-    if (response.ok) {
-      alert(`${recipe.title} added to favorites!`);
-    } else {
-      const error = await response.json();
-      alert(`Failed to add: ${error.error}`);
-    }
+    // Success if no error thrown
+    alert(`${recipe.title} added to favorites!`);
   } catch (error) {
-    console.error("Add failed:", error);
-    alert("Error adding recipe to favorites");
+    // Handle errors thrown by Axios
+    if (error.response && error.response.data && error.response.data.error) {
+      alert(`Failed to add: ${error.response.data.error}`);
+    } else {
+      console.error("Add failed:", error);
+      alert("Error adding recipe to favorites");
+    }
   }
 }
-
 
 async function removeFromFavorites(id) {
   if (!confirm('Are you sure you want to remove this recipe from favorites?')) {
     return;
   }
-  
+
   try {
-    const response = await fetch(`/recipes/delete/${id}`, {
-      method: 'DELETE'
-    });
+    await axios.delete(`/recipes/delete/${id}`);
+
+    // If no error is thrown, it was successful
+    await displayFavorites();
+    alert('Removed from favorites!');
     
-    if (response.ok) {
-      // Refresh favorites list after successful deletion
-      await displayFavorites();
-      alert('Removed from favorites!');
-    } else {
-      throw new Error('Failed to remove');
-    }
   } catch (error) {
     console.error('Error removing favorite:', error);
     alert('Error removing recipe from favorites.');
   }
 }
+
 
 
 async function displayFavorites() {
@@ -112,10 +101,9 @@ async function displayFavorites() {
   try {
     
     // Fetch favorites from database
-    const response = await fetch('/recipes/showAll');
-    if (!response.ok) throw new Error('Failed to fetch favorites');
+    const response = await axios.get('/recipes/showAll');
     
-    const favorites = await response.json();
+    const favorites = response.data;
     
     if (favorites.length === 0) {
       favoritesContainer.innerHTML = '<p>No favorites yet. Add some recipes!</p>';
@@ -187,8 +175,8 @@ document.addEventListener('DOMContentLoaded', function() {
   if (randomPage) {
     RandomButton.addEventListener("click",async ()=>{
 try {
-        const response = await fetch("/recipes/random");
-        const data = await response.json();
+        const response = await axios.get("/recipes/random");
+        const data = response.data;
         container.innerHTML="";
         console.log(data)
         data.forEach((element)=>{
@@ -239,8 +227,8 @@ try {
             alert("Please enter an ingredient");
             return;
         }
-        const response = await fetch(`/recipes/search?q=${input}`)
-        const data = await response.json();
+        const response = await axios.get(`/recipes/search?q=${input}`)
+        const data = response.data;
         searchedContainer.innerHTML="";
         console.log(data)
         data.forEach((element)=>{
