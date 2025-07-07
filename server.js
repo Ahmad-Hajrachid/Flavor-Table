@@ -19,12 +19,18 @@ const homepage = require('./routes/home')
 const recipesRouter = require("./routes/recipes")
 const randomRecipesPage = require('./routes/randomRecipe')
 const favoritesPage = require('./routes/favoritePage')
+const profilePage = require('./routes/profile')
+const loginPage = require('./routes/loginPage')
 const search = require('./routes/search')
+const authenticate = require('./routes/auth')
 app.use("/",homepage);
 app.use("/recipes",recipesRouter);
 app.use("/recipes",randomRecipesPage)
 app.use("/recipes",favoritesPage)
 app.use("/recipes",search)
+app.use("/user",profilePage)
+app.use("/user",loginPage)
+app.use('/user',authenticate)
 
 
 app.use((req, res) => {

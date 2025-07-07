@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    
+  </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../home">Home</a></li>
+                <li><a href="../recipes/randomrecipe">Random</a></li>
+                <li><a href="../recipes/searchPage">Search</a></li>
+                <li><a href="../recipes/favorites">Favorites</a></li>
+                <li><a href="../user/profile">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+  <div class="Login_container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" required>
+
+      <button type="submit">Log In</button>
+
+      <div id="error" class="error"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const errorDiv = document.getElementById("error");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorDiv.textContent = "";
+
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        const response = await axios.post("/user/login", {
+          email,
+          password
+        });
+
+        const token = response.data.token;
+
+        // Save token to localStorage
+        localStorage.setItem("token", token);
+
+        // Redirect to profile page
+        window.location.href = "/user/profile";
+      } catch (error) {
+        console.error("Login failed:", error);
+        if (error.response && error.response.status === 401) {
+          errorDiv.textContent = "Incorrect email or password.";
+        } else if (error.response && error.response.status === 404) {
+          errorDiv.textContent = "User not found.";
+        } else {
+          errorDiv.textContent = "Something went wrong. Try again.";
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
