@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="../home">Home</a></li>
+                <li><a href="../recipes/randomrecipe">Random</a></li>
+                <li><a href="../recipes/searchPage">Search</a></li>
+                <li><a href="../recipes/favorites">Favorites</a></li>
+                <li><a href="../user/profile">Profile</a></li>
+            </ul>
+        </nav>
+    </header>
+  <div class="Profile_container">
+    <h1>User Profile</h1>
+    <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+    <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+    <button id="logout">Logout</button>
+  </div>
+
+  <script>
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    alert("You must be logged in.");
+    window.location.href = "../user/login"; 
+  } else {
+    loadProfile();
+  }
+
+  async function loadProfile() {
+    try {
+      const response = await axios.get("/user/profileData", {
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+
+      const { username, email } = response.data;
+      document.getElementById("username").textContent = username;
+      document.getElementById("email").textContent = email;
+    } catch (error) {
+      console.error("Error loading profile:", error);
+      localStorage.removeItem("token");
+      window.location.href = "../user/login";
+    }
+  }
+
+  document.getElementById("logout").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "../home";
+  });
+</script>
+</body>
+</html>

@@ -121,9 +121,13 @@ async function displayFavorites() {
         ? JSON.parse(recipe.ingredients) 
         : recipe.ingredients;
       
-      const ingredientsList = ingredients.map(ing => 
-        `<li>${ing.name}${ing.amount ? ` (${ing.amount})` : ''}</li>`
-      ).join('');
+      const ingredientsList = ingredients.map(ing => {
+          if (typeof ing === 'string') {
+            return `<li>${ing}</li>`;
+          } else {
+            return `<li>${ing.name}${ing.amount ? ` (${ing.amount})` : ''}</li>`;
+          }
+        }).join('');
       
       card.innerHTML = `
         
@@ -206,7 +210,7 @@ try {
         });
         
     } catch(error){
-        console.log("cought an error",error)
+        console.log("cought an error",error);
     }
 });
   }
@@ -262,3 +266,4 @@ try {
 })
   }
 });
+

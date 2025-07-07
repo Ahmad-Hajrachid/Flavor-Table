@@ -17,6 +17,7 @@
                 <li><a href="../recipes/randomrecipe">Random</a></li>
                 <li><a href="../recipes/searchPage">Search</a></li>
                 <li><a href="../recipes/favorites">Favorites</a></li>
+                <li><a href="../user/profile">Profile</a></li>
             </ul>
         </nav>
     </header>
@@ -71,7 +72,10 @@
       document.getElementById("image").value = data.image;
       document.getElementById("instructions").value = data.instructions;
       document.getElementById("ingredients").value = data.ingredients
-        .map(ing => `${ing.name}${ing.amount ? ` (${ing.amount} ${ing.unit})` : ''}`)
+        .map(ing => {
+          if (typeof ing === 'string') return ing;
+          return `${ing.name}${ing.amount ? ` (${ing.amount}${ing.unit ? ` ${ing.unit}` : ''})` : ''}`;
+        })
         .join(", ");
       document.getElementById("readyin").value = data.readyin;
 

@@ -4,15 +4,17 @@ const axios = require("axios");
 const pg = require('pg')
 const key = process.env.SECRET_KEY;
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL });
+const routeGuard = require('../middleware/verifyToken');
 
 router.get("/random", async (req, res) => {
   try {
-    
+    const userToken = req.token;
+
     const response = await axios.get("https://api.spoonacular.com/recipes/random", {
       params: {
         apiKey: key,
         number: 5,
-      },
+      }
     });
 
     res.json(response.data.recipes);
